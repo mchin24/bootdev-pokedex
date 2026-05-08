@@ -1,3 +1,24 @@
+export type CLICommand = {
+    name: string;
+    description: string;
+    callback: (commands: Record<string, CLICommand>) => void;
+}
+
+export function getCommands(): Record<string, CLICommand> {
+    return {
+        help: {
+            name: "help",
+            description: "Displays a help message",
+            callback: commandHelp
+        },
+        exit: {
+            name: "exit",
+            description: "Exits the pokedex",
+            callback: commandExit
+        }
+    };
+}
+
 export function cleanInput(input: string): string[] {
     const cleaned = input.trim().toLowerCase().split(/\s+/);
     return cleaned;
@@ -20,7 +41,27 @@ export function startREPL() {
             return;
         }
         const command = cleanedInput[0];
-        console.log(`Your command was: ${command}`);
+        const commands = getCommands();
+        if (command in commands) {
+            commands[command].callback(commands);
+        } else {
+            console.log('Unknown command');
+        }
+        
         replInterface.prompt();
     });
+}
+
+export function commandExit() {
+    console.log('Closing the Pokedex... Goodbye!');
+    process.exit(0);
+};
+
+export function commandHelp() {
+    console.log(`Welcome to the Pokedex!\nUsage:\n`);
+
+    const commands = getCommands();
+    for (const command in commands) {
+        console.log(`${commands[command].name}: ${commands[command].description}`);
+    }
 }
