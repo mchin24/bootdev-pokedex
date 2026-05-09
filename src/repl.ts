@@ -1,8 +1,6 @@
-export type CLICommand = {
-    name: string;
-    description: string;
-    callback: (commands: Record<string, CLICommand>) => void;
-}
+import type { CLICommand } from "./commands/command.js";
+import { commandHelp } from "./commands/commandHelp.js";
+import { commandExit } from "./commands/commandExit.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -50,18 +48,4 @@ export function startREPL() {
         
         replInterface.prompt();
     });
-}
-
-export function commandExit() {
-    console.log('Closing the Pokedex... Goodbye!');
-    process.exit(0);
-};
-
-export function commandHelp() {
-    console.log(`Welcome to the Pokedex!\nUsage:\n`);
-
-    const commands = getCommands();
-    for (const command in commands) {
-        console.log(`${commands[command].name}: ${commands[command].description}`);
-    }
 }
