@@ -1,10 +1,9 @@
 import { createInterface, type Interface } from "node:readline";
-import { commandHelp } from "./commands/commandHelp.js";
-import { commandExit } from "./commands/commandExit.js";
+import { getCommands } from "./commands/commands.js";
 
 export type State = {
     commands: Record<string, CLICommand>;
-    interface: Interface;
+    readline: Interface;
 }
 
 export type CLICommand = {
@@ -14,18 +13,6 @@ export type CLICommand = {
 }
 
 export function initState(): State {
-    const commandsRegistry = {
-        help: {
-            name: "help",
-            description: "Displays a help message",
-            callback: commandHelp
-        },
-        exit: {
-            name: "exit",
-            description: "Exits the pokedex",
-            callback: commandExit
-        }
-    };
     const replInterface = createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -33,7 +20,7 @@ export function initState(): State {
     });
 
     return {
-        commands: commandsRegistry,
-        interface: replInterface
+        commands: getCommands(),
+        readline: replInterface
     }
 }

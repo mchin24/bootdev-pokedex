@@ -1,20 +1,17 @@
-import type { CLICommand, State} from "./state.js";
+import type { State} from "./state.js";
 
 export function cleanInput(input: string): string[] {
     const cleaned = input.trim().toLowerCase().split(/\s+/);
     return cleaned;
 }
 
-import { createInterface } from "node:readline";
-
-
 
 export function startREPL(state: State) {
-    state.interface.prompt();
-    state.interface.on("line", (line) => {
+    state.readline.prompt();
+    state.readline.on("line", (line) => {
         const cleanedInput = cleanInput(line);
         if (cleanedInput.length === 0) {
-            state.interface.prompt();
+            state.readline.prompt();
             return;
         }
         const command = cleanedInput[0];
@@ -25,6 +22,6 @@ export function startREPL(state: State) {
             console.log('Unknown command');
         }
         
-        state.interface.prompt();
+        state.readline.prompt();
     });
 }
