@@ -1,9 +1,11 @@
 import { createInterface, type Interface } from "node:readline";
 import { getCommands } from "./commands/commands.js";
+import { PokeAPI } from "./pokemon.js";
 
 export type State = {
     commands: Record<string, CLICommand>;
     readline: Interface;
+    pokeAPI: PokeAPI;
 }
 
 export type CLICommand = {
@@ -21,6 +23,7 @@ export function initState(): State {
 
     return {
         commands: getCommands(),
-        readline: replInterface
+        readline: replInterface,
+        pokeAPI: new PokeAPI
     }
 }
