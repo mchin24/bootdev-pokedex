@@ -6,12 +6,14 @@ export type State = {
     commands: Record<string, CLICommand>;
     readline: Interface;
     pokeAPI: PokeAPI;
+    nextLocationsURL: string | null;
+    prevLocationsURL: string | null;
 }
 
 export type CLICommand = {
     name: string;
     description: string;
-    callback: (state: State) => void;
+    callback: (state: State) => Promise<void>;
 }
 
 export function initState(): State {
@@ -24,6 +26,8 @@ export function initState(): State {
     return {
         commands: getCommands(),
         readline: replInterface,
-        pokeAPI: new PokeAPI
+        pokeAPI: new PokeAPI,
+        nextLocationsURL: null,
+        prevLocationsURL: null
     }
 }

@@ -1,3 +1,5 @@
+import { StatementSync } from "node:sqlite";
+
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
 
@@ -9,18 +11,25 @@ export class PokeAPI {
       throw new Error(`Failed to fetch locations: ${resp.status} ${resp.statusText}`);
     }
     const data = await resp.json();
+    
+  
     return data as ShallowLocations;
   }
 
   async fetchLocation(locationName: string): Promise<Location> {
     const resp = await fetch(`${PokeAPI.baseURL}/location/${locationName}`);
-    return resp.json() as Promise<Location>;
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch location: ${resp.status} ${resp.statusText}`);
+    }
+    const location = await resp.json();
+    return {id: location.id, name: location.name, url: location.url} as Location;
   }
 }
 
 export type ShallowLocations = {
   "count": number,
-  "next": string,
+  "next": string | null,
+  "previous": string | null,
   "results": Location[]
 };
 
