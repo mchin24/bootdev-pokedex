@@ -6,8 +6,9 @@ export class PokeAPI {
   constructor() {}
 
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-    const resp = await fetch(`${PokeAPI.baseURL}/location-area/${pageURL ? `?offset=${pageURL}` : ""}`);
+    const resp = await fetch(pageURL ? pageURL : `${PokeAPI.baseURL}/location-area/`);
     if (!resp.ok) {
+      console.log(`${PokeAPI.baseURL}/location-area/}`);
       throw new Error(`Failed to fetch locations: ${resp.status} ${resp.statusText}`);
     }
     const data = await resp.json();
